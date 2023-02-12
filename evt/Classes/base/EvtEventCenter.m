@@ -58,7 +58,7 @@ static NSMutableDictionary* _handlers = nil;
     }
 }
 
--(MEvtHandler*)handler {
+-(EvtHandler*)handler {
     return [_handlers valueForKey:_key];
 }
 

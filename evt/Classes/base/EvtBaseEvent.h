@@ -6,13 +6,13 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MVTEV_KEY
-#define MVTEV_KEY(__name) \
+#ifndef EVT_EV_KEY
+#define EVT_EV_KEY(__name) \
 @property (class, copy, nonatomic, readonly) NSString* __name;
 #endif
 
-#ifndef MVTEV_KEY_IMPL
-#define MVTEV_KEY_IMPL(__name, __value)\
+#ifndef EVT_EV_KEY_IMPL
+#define EVT_EV_KEY_IMPL(__name, __value)\
 static NSString* _##__name = __value;\
 +(NSString*) __name {\
     return _##__name;\
