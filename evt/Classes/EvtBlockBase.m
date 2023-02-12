@@ -1,17 +1,16 @@
 //
-//  MFBlockBase.m
-//  yylove
+//  EvtBlockBase.m
 //
 //  Created by lovis on 2018/5/22.
 //
 
-#import "MFBlockBase.h"
-#import "MFModule.h"
+#import "EvtBlockBase.h"
+#import "EvtModule.h"
 
-@implementation MFBlockBase
+@implementation EvtBlockBase
 {
     NSMutableDictionary* _handlers;
-    id<MFModule> _module;
+    id<EvtModule> _module;
     bool _stoped;
 }
 
@@ -27,7 +26,7 @@
     return self;
 }
 
--(instancetype)initWidth:(id<MFModule>)module {
+-(instancetype)initWidth:(id<EvtModule>)module {
     self = [self init];
     if (self) {
         _module = module;

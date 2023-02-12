@@ -1,33 +1,32 @@
 //
-//  MFEventCenter.m
-//  yylove
+//  EvtEventCenter.m
 //
 //  Created by lovis on 2018/5/21.
 //
 
-#import "MFEventCenter.h"
-#import "MFEventConst.h"
+#import "EvtEventCenter.h"
+#import "EvtEventConst.h"
 
-@interface MFEventBody: NSObject
+@interface EvtEventBody: NSObject
 @property (copy, nonatomic, readonly) NSString* key;
 @property (assign, nonatomic, readonly) int priority;
 
 +(void)clear;
 
--(instancetype)initWith:(MFHandler*)handler priority:(int)priority;
+-(instancetype)initWith:(EvtHandler*)handler priority:(int)priority;
 
--(MFHandler*)handler;
--(bool)same:(MFHandler*)handler priority:(int)priority;
+-(EvtHandler*)handler;
+-(bool)same:(EvtHandler*)handler priority:(int)priority;
 -(bool)same:(NSObject*)listener;
--(void)exec:(MFBaseEvent*)evt;
+-(void)exec:(EvtBaseEvent*)evt;
 @end
 
-@implementation MFEventBody
+@implementation EvtEventBody
 static int _baseKey = 0;
 static NSMutableDictionary* _handlers = nil;
 
 +(void)clear {
-    @synchronized(MFEventBody.class) {
+    @synchronized(EvtEventBody.class) {
         [_handlers removeAllObjects];
     }
 }
@@ -41,10 +40,10 @@ static NSMutableDictionary* _handlers = nil;
     }
 }
 
--(instancetype)initWith:(MFHandler*)handler priority:(int)priority {
+-(instancetype)initWith:(EvtHandler*)handler priority:(int)priority {
     self = [super init];
     if(self) {
-        @synchronized (MFEventBody.class) {
+        @synchronized (EvtEventBody.class) {
             _key = [NSString stringWithFormat:@"%d", ++_baseKey];
             [_handlers setValue:handler forKey:_key];
         }
@@ -54,46 +53,46 @@ static NSMutableDictionary* _handlers = nil;
 }
 
 -(void)dealloc {
-    @synchronized (MFEventBody.class) {
+    @synchronized (EvtEventBody.class) {
         [_handlers removeObjectForKey:_key];
     }
 }
 
--(MFHandler*)handler {
+-(MEvtHandler*)handler {
     return [_handlers valueForKey:_key];
 }
 
--(bool)same:(MFHandler*)handler priority:(int)priority{
-    MFHandler* data = [_handlers valueForKey:_key];
+-(bool)same:(EvtHandler*)handler priority:(int)priority{
+    EvtHandler* data = [_handlers valueForKey:_key];
     return data && [data same:handler] && (_priority == priority);
 }
 
 -(bool)same:(NSObject*)listener {
-    MFHandler* data = [_handlers valueForKey:_key];
+    EvtHandler* data = [_handlers valueForKey:_key];
     return data && [data has:listener];
 }
 
--(void)exec:(MFBaseEvent*)evt{
-    MFHandler* data = [_handlers valueForKey:_key];
+-(void)exec:(EvtBaseEvent*)evt{
+    EvtHandler* data = [_handlers valueForKey:_key];
     if ([data isNull]) return;
     
     [data invoke:evt];
 }
 @end
 //////////////////////////////////////
-@interface MFModuleBody: NSObject
+@interface EvtModuleBody: NSObject
 @property (assign, nonatomic) bool paused;
 
 -(instancetype)initWidth: (bool) enabled;
--(void)exec:(NSString*)key evt:(MFBaseEvent*)evt;
+-(void)exec:(NSString*)key evt:(EvtBaseEvent*)evt;
 
--(void)add:(NSString*)key handler:(MFHandler*)handler priority:(int)priority;
--(void)remove:(NSString*)key handler:(MFHandler*)handler priority:(int)priority;
+-(void)add:(NSString*)key handler:(EvtHandler*)handler priority:(int)priority;
+-(void)remove:(NSString*)key handler:(EvtHandler*)handler priority:(int)priority;
 -(void)clear:(NSString*)key listener:(NSObject*)listener;
 -(void)clear;
 @end
 
-@implementation MFModuleBody
+@implementation EvtModuleBody
 {
     NSMutableDictionary* _events;
 }
@@ -115,7 +114,7 @@ static NSMutableDictionary* _handlers = nil;
     return self;
 }
 
--(void)exec:(NSString*)key evt:(MFBaseEvent*)evt {
+-(void)exec:(NSString*)key evt:(EvtBaseEvent*)evt {
     NSArray* list = [_events valueForKey:key];
     if (_paused || !list) return;
     
@@ -126,16 +125,16 @@ static NSMutableDictionary* _handlers = nil;
     [self execItems:list evt:evt];
 }
 
--(void)execItems:(NSArray*)list evt:(MFBaseEvent*)evt{
-    for (MFEventBody* body in list) {
+-(void)execItems:(NSArray*)list evt:(EvtBaseEvent*)evt{
+    for (EvtEventBody* body in list) {
         [body exec:evt];
     }
 }
 
--(int)indexOf:(NSArray*)list handler:(MFHandler*)handler priority:(int)priority{
+-(int)indexOf:(NSArray*)list handler:(EvtHandler*)handler priority:(int)priority{
     int result = -1;
     for (int i = 0; i < list.count; ++i) {
-        MFEventBody* body = list[i];
+        EvtEventBody* body = list[i];
         if(body && [body same:handler priority:priority]) {
             result = i;
             break;
@@ -147,7 +146,7 @@ static NSMutableDictionary* _handlers = nil;
 -(int)indexOf:(NSArray*)list listener:(NSObject*)listener {
     int result = -1;
     for (int i = 0; i < list.count; ++i) {
-        MFEventBody* body = list[i];
+        EvtEventBody* body = list[i];
         if(body && [body same:listener]) {
             result = i;
             break;
@@ -156,7 +155,7 @@ static NSMutableDictionary* _handlers = nil;
     return result;
 }
 
--(void)add:(NSString*)key handler:(MFHandler*)handler priority:(int)priority {
+-(void)add:(NSString*)key handler:(EvtHandler*)handler priority:(int)priority {
     NSMutableArray* list = [_events valueForKey:key];
     if (!list) {
         list = [[NSMutableArray alloc]init];
@@ -164,14 +163,14 @@ static NSMutableDictionary* _handlers = nil;
     }
     @synchronized (self) {
         if ([self indexOf:list handler:handler priority:priority] < 0) {
-            [list addObject:[[MFEventBody alloc] initWith:handler priority:priority]];
+            [list addObject:[[EvtEventBody alloc] initWith:handler priority:priority]];
             NSArray* descs = @[[NSSortDescriptor sortDescriptorWithKey:@"priority" ascending:NO]];
             [list sortUsingDescriptors:descs];
         }
     }
 }
 
--(void)remove:(NSString*)key handler:(MFHandler*)handler priority:(int)priority {
+-(void)remove:(NSString*)key handler:(EvtHandler*)handler priority:(int)priority {
     NSMutableArray* list = [_events valueForKey:key];
     if (!list) return;
     
@@ -204,7 +203,7 @@ static NSMutableDictionary* _handlers = nil;
 }
 @end
 ///////////////////////////////////////
-@implementation MFEventCenter
+@implementation EvtEventCenter
 
 static NSMutableDictionary* _modules = nil;
 
@@ -218,54 +217,54 @@ static NSMutableDictionary* _modules = nil;
 }
 
 + (void)clear { 
-    @synchronized (MFEventCenter.class) {
+    @synchronized (EvtEventCenter.class) {
         [_modules removeAllObjects];
     }
 }
 
 + (void)clear:(nullable NSString *)key subKey:(nullable NSString *)subKey listener:(nullable NSObject*)listener {
-    MFModuleBody* body = [_modules valueForKey:key];
+    EvtModuleBody* body = [_modules valueForKey:key];
     if (!body) return;
     
     [body clear:subKey listener:listener];
 }
 
 + (void)clear:(nullable NSString *)key { 
-    MFModuleBody* body = [_modules valueForKey:key];
+    EvtModuleBody* body = [_modules valueForKey:key];
     if (!body) return;
     
     [body clear];
 }
 
 + (void)setPause:(nullable NSString *)key enabled:(bool)enabled { 
-    MFModuleBody* body = [_modules valueForKey:key];
+    EvtModuleBody* body = [_modules valueForKey:key];
     if (!body) return;
     
     body.paused = enabled;
 }
 
-+ (void)dispatch:(nullable NSString *)key subKey:(nullable NSString *)subKey evt:(nullable MFBaseEvent*)evt {
-    if (MFEventConst.switched) return;
++ (void)dispatch:(nullable NSString *)key subKey:(nullable NSString *)subKey evt:(nullable EvtBaseEvent*)evt {
+    if (EvtEventConst.switched) return;
     
-    MFModuleBody* body = [_modules valueForKey:key];
+    EvtModuleBody* body = [_modules valueForKey:key];
     if (!body) return;
     
     [body exec:subKey evt:evt];
 }
 
-+ (void)removeListener:(nullable NSString *)key subKey:(nullable NSString *)subKey handler:(nullable MFHandler*)handler priority:(int)priority {
-    MFModuleBody* body = [_modules valueForKey:key];
++ (void)removeListener:(nullable NSString *)key subKey:(nullable NSString *)subKey handler:(nullable EvtHandler*)handler priority:(int)priority {
+    EvtModuleBody* body = [_modules valueForKey:key];
     if (!body) return;
     
     [body remove:subKey handler:handler priority:priority];
 }
 
-+ (void)addListener:(nullable NSString *)key subKey:(nullable NSString *)subKey handler:(nullable MFHandler *)handler priority:(int)priority { 
++ (void)addListener:(nullable NSString *)key subKey:(nullable NSString *)subKey handler:(nullable EvtHandler *)handler priority:(int)priority { 
     if (!handler) return;
-    MFModuleBody* body = [_modules valueForKey:key];
+    EvtModuleBody* body = [_modules valueForKey:key];
     if (!body) {
-        @synchronized (MFEventCenter.class) {
-            body = [[MFModuleBody alloc]initWidth:MFEventConst.switched];
+        @synchronized (EvtEventCenter.class) {
+            body = [[EvtModuleBody alloc]initWidth:EvtEventConst.switched];
             [_modules setObject:body forKey:key];
         }
     }

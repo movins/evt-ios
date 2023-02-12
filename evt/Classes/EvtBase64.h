@@ -1,13 +1,12 @@
 //
-//  MFBase64.h
-//  yylove
+//  EvtBase64.h
 //
 //  Created by lovis on 2018/5/26.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface MFBase64 : NSObject
+@interface EvtBase64 : NSObject
 
 +(NSString*)base64EncodeData:(NSData*)data;
 +(NSString*)base64EncodeString:(NSString*)string;

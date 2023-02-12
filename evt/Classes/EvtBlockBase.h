@@ -1,12 +1,11 @@
 //
-//  MFBlockBase.h
-//  yylove
+//  EvtBlockBase.h
 //
 //  Created by lovis on 2018/5/22.
 //
 
-#import "MFDispatcherBase.h"
-#import "MFBlock.h"
+#import "EvtDispatcherBase.h"
+#import "EvtBlock.h"
 
-@interface MFBlockBase : MFDispatcherBase<MFBlock>
+@interface EvtBlockBase : EvtDispatcherBase<EvtBlock>
 @end

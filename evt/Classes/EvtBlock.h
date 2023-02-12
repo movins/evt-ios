@@ -1,20 +1,19 @@
 //
-//  MFBlock.h
-//  yylove
+//  EvtBlock.h
 //
 //  Created by lovis on 2018/5/22.
 //
 
 #import <Foundation/Foundation.h>
 
-@protocol MFModule;
-@protocol MFDispatcher;
+@protocol EvtModule;
+@protocol EvtDispatcher;
 
-@protocol MFBlock <MFDispatcher>
+@protocol EvtBlock <EvtDispatcher>
 @property (assign, nonatomic, readonly) bool stoped;
-@property (copy, nonatomic, readonly) id<MFModule> module;
+@property (copy, nonatomic, readonly) id<EvtModule> module;
 
--(instancetype)initWidth:(id<MFModule>)module;
+-(instancetype)initWidth:(id<EvtModule>)module;
 
 -(void)destroy;
 -(void)start;

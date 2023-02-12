@@ -1,16 +1,15 @@
 //
-//  MFDispatcher.m
-//  yylove
+//  EvtDispatcher.m
 //
 //  Created by lovis on 2018/5/21.
 //
 
-#import "MFDispatcherBase.h"
-#import "MFEventCenter.h"
-#import "MFHandler.h"
-#import "MFEventConst.h"
+#import "EvtDispatcherBase.h"
+#import "EvtEventCenter.h"
+#import "EvtHandler.h"
+#import "EvtEventConst.h"
 
-@implementation MFDispatcherBase
+@implementation EvtDispatcherBase
 {
     NSString* _baseKey;
 }
@@ -24,28 +23,28 @@
 }
 
 - (void)setPause:(bool)paused { 
-    [MFEventCenter setPause:_baseKey enabled:paused];
+    [EvtEventCenter setPause:_baseKey enabled:paused];
 }
 
 - (void)clear:(NSString *)key listener:(NSObject *)listener { 
-    [MFEventCenter clear:_baseKey subKey:key listener:listener];
+    [EvtEventCenter clear:_baseKey subKey:key listener:listener];
 }
 
 - (void)clear { 
-    [MFEventCenter clear:_baseKey];
+    [EvtEventCenter clear:_baseKey];
 }
 
 - (void)doEvent:(NSString *)key data:(NSObject *)data { 
-    MFBaseEvent* evt = [[MFBaseEvent alloc] initWith:key data:data];
+    EvtBaseEvent* evt = [[EvtBaseEvent alloc] initWith:key data:data];
     [self dispatch:key evt:evt];
 }
 
-- (void)dispatch:(NSString *)key evt:(MFBaseEvent *)evt { 
-    [MFEventCenter dispatch:_baseKey subKey:key evt:evt];
+- (void)dispatch:(NSString *)key evt:(EvtBaseEvent *)evt { 
+    [EvtEventCenter dispatch:_baseKey subKey:key evt:evt];
 }
 
 - (void)removeListener:(NSString *)key listener:(NSObject *)listener selector:(SEL)selector priority:(int)priority { 
-    [MFEventCenter removeListener:_baseKey subKey:key handler:[[MFHandler alloc]initWith:listener selector:selector] priority:priority];
+    [EvtEventCenter removeListener:_baseKey subKey:key handler:[[EvtHandler alloc]initWith:listener selector:selector] priority:priority];
 }
 
 - (void)removeListener:(NSString *)key selector:(SEL)selector priority:(int)priority {
@@ -53,15 +52,15 @@
 }
 
 -(void)removeListener:(NSString*)key listener:(NSObject*)listener selector:(SEL)selector {
-    [self removeListener:key listener:listener selector:selector priority:MFNormal];
+    [self removeListener:key listener:listener selector:selector priority:EvtNormal];
 }
 
 - (void)removeListener:(NSString *)key selector:(SEL)selector {
-    [self removeListener:key listener:self selector:selector priority:MFNormal];
+    [self removeListener:key listener:self selector:selector priority:EvtNormal];
 }
 
 - (void)addListener:(NSString *)key listener:(NSObject *)listener selector:(SEL)selector priority:(int)priority async:(bool)async { 
-    [MFEventCenter addListener:_baseKey subKey:key handler:[[MFHandler alloc]initWith:listener selector:selector async:async] priority:priority];
+    [EvtEventCenter addListener:_baseKey subKey:key handler:[[EvtHandler alloc]initWith:listener selector:selector async:async] priority:priority];
 }
 
 - (void)addListener:(NSString *)key listener:(NSObject *)listener selector:(SEL)selector priority:(int)priority { 
@@ -77,11 +76,11 @@
 }
 
 -(void)addListener:(NSString*)key listener:(NSObject*)listener selector:(SEL)selector {
-    [self addListener:key listener:listener selector:selector priority:MFNormal async:false];
+    [self addListener:key listener:listener selector:selector priority:EvtNormal async:false];
 }
 
 - (void)addListener:(NSString *)key selector:(SEL)selector { 
-   [self addListener:key listener:self selector:selector priority:MFNormal async:false];
+   [self addListener:key listener:self selector:selector priority:EvtNormal async:false];
 }
 
 @end

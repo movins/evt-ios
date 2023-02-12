@@ -1,14 +1,13 @@
 //
-//  MFCloneable.m
-//  yylove
+//  EvtCloneable.m
 //
 //  Created by lovis on 2018/5/21.
 //
 
-#import "MFCloneable.h"
+#import "EvtCloneable.h"
 #import <objc/runtime.h>
 
-@implementation MFCloneable
+@implementation EvtCloneable
 
 static NSMutableSet* _properties = nil;
 
@@ -80,7 +79,7 @@ static NSMutableSet* _properties = nil;
     }
 }
 
--(bool)same:(MFCloneable*)obj
+-(bool)same:(EvtCloneable*)obj
 {
     bool result = false;
     do {
@@ -91,7 +90,7 @@ static NSMutableSet* _properties = nil;
             id value = [self valueForKey:name];
             id other = [obj valueForKey:name];
             
-            if ([value isKindOfClass:MFCloneable.class] && ![value same:obj]) {
+            if ([value isKindOfClass:EvtCloneable.class] && ![value same:obj]) {
                 result = true;
                 break;
             } else if ([value isKindOfClass:NSObject.class] && ![value isEqual:other]) {

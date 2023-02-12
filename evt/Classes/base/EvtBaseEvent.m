@@ -1,13 +1,12 @@
 //
-//  MFBaseEvent.m
-//  yylove
+//  EvtBaseEvent.m
 //
 //  Created by lovis on 2018/5/21.
 //
 
-#import "MFBaseEvent.h"
+#import "EvtBaseEvent.h"
 
-@implementation MFBaseEvent
+@implementation EvtBaseEvent
 
 - (instancetype)initWith:(NSString *)key data:(id)data {
     self = [self initWith: key];

@@ -1,19 +1,18 @@
 //
-//  MFEventConst.h
-//  yylove
+//  EvtEventConst.h
 //
 //  Created by lovis on 2018/5/21.
 //
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, MFPriority) {
-    MFLow,
-    MFNormal,
-    MFHigh,
+typedef NS_ENUM(NSUInteger, EvtPriority) {
+    EvtLow,
+    EvtNormal,
+    EvtHigh,
 };
 
-@interface MFEventConst : NSObject
+@interface EvtEventConst : NSObject
 @property (class, assign, nonatomic, getter=isSwitched) bool switched;
 
 +(void)clear;

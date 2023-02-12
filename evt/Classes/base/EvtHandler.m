@@ -1,13 +1,12 @@
 //
-//  MFHandler.m
-//  yylove
+// EvtHandler.m
 //
 //  Created by lovis on 2018/5/21.
 //
 
-#import "MFHandler.h"
+#import "EvtHandler.h"
 
-@interface MFHandler ()
+@interface EvtHandler ()
 {
     
 }
@@ -17,12 +16,12 @@
 
 @end
 
-@implementation MFHandler
-- (void)invoke:(MFBaseEvent *)evt {
+@implementation EvtHandler
+- (void)invoke:(EvtBaseEvent *)evt {
     void (^doInvoke)(void) = ^{
         if ([_listener respondsToSelector:_selector]) {
             IMP imp = [_listener methodForSelector:_selector];
-            void (*func)(id, SEL, MFBaseEvent*) = (void *)imp;
+            void (*func)(id, SEL, EvtBaseEvent*) = (void *)imp;
             func(_listener, _selector, evt);
         }
     };
@@ -71,7 +70,7 @@
     return (_listener == listener);
 }
 
-- (bool)same:(MFHandler *)handler { 
+- (bool)same:(EvtHandler *)handler { 
     return handler && (_listener == handler.listener) && (_selector == handler.selector);
 }
 

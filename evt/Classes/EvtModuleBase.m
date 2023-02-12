@@ -1,14 +1,13 @@
 //
-//  MFModuleBase.m
-//  yylove
+//  EvtModuleBase.m
 //
 //  Created by lovis on 2018/5/22.
 //
 
-#import "MFModuleBase.h"
-#import "MFBlock.h"
+#import "EvtModuleBase.h"
+#import "EvtBlock.h"
 
-@implementation MFModuleBase
+@implementation EvtModuleBase
 {
     NSMutableDictionary* _blocks;
     id<NSObject> _api;
@@ -34,7 +33,7 @@
 }
 
 -(void)destroy {
-    for (id<MFBlock> block in _blocks) {
+    for (id<EvtBlock> block in _blocks) {
         [block stop];
         [block destroy];
     }
@@ -44,7 +43,7 @@
 }
 
 -(void)start {
-    for (id<MFBlock> block in _blocks) {
+    for (id<EvtBlock> block in _blocks) {
         [block start];
     }
     [self setPause:false];
@@ -52,16 +51,16 @@
 
 -(void)stop {
     [self setPause:true];
-    for (id<MFBlock> block in _blocks) {
+    for (id<EvtBlock> block in _blocks) {
         [block stop];
     }
 }
 
 -(void)log:(NSString*)tag content:(NSString*)content {
-    MFLogInfo(tag, @"%@", content);
+    // EvtLogInfo(tag, @"%@", content);
 }
 
--(void)addBlock:(NSString*)key block:(id<MFBlock>)block {
+-(void)addBlock:(NSString*)key block:(id<EvtBlock>)block {
     if (!block) return;
     [_blocks setObject:block forKey:key];
     
@@ -69,7 +68,7 @@
 }
 
 -(void)removeBlock:(NSString*)key {
-    id<MFBlock> block = [_blocks valueForKey:key];
+    id<EvtBlock> block = [_blocks valueForKey:key];
     if (block) {
         [block stop];
         [block destroy];
@@ -77,18 +76,18 @@
     }
 }
 
--(id<MFBlock>)block:(NSString*)key {
+-(id<EvtBlock>)block:(NSString*)key {
     return [_blocks valueForKey:key];
 }
 
 -(void)addBlockListener:(NSString*)blockKey evtKey:(NSString*)evtKey listener:(NSObject*)listener selector:(SEL)selector {
-    id<MFBlock> block = [_blocks valueForKey:blockKey];
+    id<EvtBlock> block = [_blocks valueForKey:blockKey];
     if (block) {
         [block addListener:evtKey listener:listener selector:selector];
     }
 }
 -(void)removeBlockListener:(NSString*)blockKey evtKey:(NSString*)evtKey listener:(NSObject*)listener selector:(SEL)selector {
-    id<MFBlock> block = [_blocks valueForKey:blockKey];
+    id<EvtBlock> block = [_blocks valueForKey:blockKey];
     if (block) {
         [block removeListener:evtKey listener:listener selector:selector];
     }

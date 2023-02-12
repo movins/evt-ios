@@ -1,26 +1,25 @@
 //
-//  MFBaseEvent.h
-//  yylove
+//  EvtBaseEvent.h
 //
 //  Created by lovis on 2018/5/21.
 //
 
 #import <Foundation/Foundation.h>
 
-#ifndef MFEV_KEY
-#define MFEV_KEY(__name) \
+#ifndef MVTEV_KEY
+#define MVTEV_KEY(__name) \
 @property (class, copy, nonatomic, readonly) NSString* __name;
 #endif
 
-#ifndef MFEV_KEY_IMPL
-#define MFEV_KEY_IMPL(__name, __value)\
+#ifndef MVTEV_KEY_IMPL
+#define MVTEV_KEY_IMPL(__name, __value)\
 static NSString* _##__name = __value;\
 +(NSString*) __name {\
     return _##__name;\
 }
 #endif
 
-@interface MFBaseEvent : NSObject
+@interface EvtBaseEvent : NSObject
 @property (copy, readonly) NSString* key;
 @property (strong, readwrite) id eventData;
 

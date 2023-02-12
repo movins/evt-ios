@@ -1,13 +1,12 @@
 //
-//  MFBase64.m
-//  yylove
+//  EvtBase64.m
 //
 //  Created by lovis on 2018/5/26.
 //
 
-#import "MFBase64.h"
+#import "EvtBase64.h"
 
-@implementation MFBase64
+@implementation EvtBase64
 
 + (NSData *)base64DecodeData:(NSString *)base64 { 
     return [[NSData alloc]initWithBase64EncodedString:base64 options:NSDataBase64DecodingIgnoreUnknownCharacters];

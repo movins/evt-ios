@@ -1,20 +1,19 @@
 //
-//  MFEventConst.m
-//  yylove
+//  EvtEventConst.m
 //
 //  Created by lovis on 2018/5/21.
 //
 
-#import "MFEventConst.h"
-#import "MFEventCenter.h"
-#import "MFLogger.h"
+#import "EvtEventConst.h"
+#import "EvtEventCenter.h"
+// #import "EvtLogger.h"
 
-@implementation MFEventConst
+@implementation EvtEventConst
 
 static bool _switched = false;
 
 + (void)clear { 
-    [MFEventCenter clear];
+    [EvtEventCenter clear];
 }
 
 + (void)log:(NSString *)tag, ... {
@@ -34,7 +33,7 @@ static bool _switched = false;
     va_start(args, format);
     NSString* content = [[NSString alloc]initWithFormat:format arguments:args];
     va_end(args);
-    MFLogInfo(tag, @"%@", content);
+    // EvtLogInfo(tag, @"%@", content);
 }
 
 @end
