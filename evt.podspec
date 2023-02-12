@@ -7,7 +7,7 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = 'evt'
+  s.name             = 'evt-ios'
   s.version          = '0.0.1'
   s.summary          = '事件分发基础库.'
 
